@@ -79,6 +79,22 @@ document.addEventListener("DOMContentLoaded", () => {
   //const squaresArray = Array.from(document.getElementsByClassName("square")); // old way just getting the squares
   let squaresArray = Array.from(document.querySelectorAll(".grid div"));
 
+  // * * *
+  //assign functions to keyCodes
+  function control(e) {
+    if (e.keyCode === 37) {
+      moveTetrominoLeft();
+    } else if (e.keyCode === 38) {
+      rotateTetromino();
+    } else if (e.keyCode === 39) {
+      moveTetrominoRight();
+    } else if (e.keyCode === 40) {
+      moveTetrominoDown();
+    }
+  }
+  document.addEventListener("keyup", control);
+  // * * *
+
   function drawTetromino() {
     currentTetromino.forEach((index) => {
       squaresArray[currentPosition + index].classList.add("tetromino");
@@ -109,6 +125,54 @@ document.addEventListener("DOMContentLoaded", () => {
     currentPosition += width;
     drawTetromino();
     freezeTetromino();
+  }
+
+  function moveTetrominoLeft() {
+    undrawTetromino();
+    const isAtLeftEdge = currentTetromino.some(
+      (index) => (currentPosition + index) % width === 0
+    );
+
+    // Move only if not at the very edge
+    if (!isAtLeftEdge) currentPosition -= 1;
+
+    if (
+      currentTetromino.some((index) =>
+        squaresArray[currentPosition + index].classList.contains("taken")
+      )
+    ) {
+      currentPosition += 1;
+    }
+    drawTetromino();
+  }
+
+  function moveTetrominoRight() {
+    undrawTetromino();
+    const isAtRightEdge = currentTetromino.some(
+      (index) => (currentPosition + index) % width === width - 1
+    );
+
+    // Move only if not at the very edge
+    if (!isAtRightEdge) currentPosition += 1;
+
+    if (
+      currentTetromino.some((index) =>
+        squaresArray[currentPosition + index].classList.contains("taken")
+      )
+    ) {
+      currentPosition -= 1;
+    }
+    drawTetromino();
+  }
+
+  function rotateTetromino() {
+    undrawTetromino();
+    currentRotation++;
+    if (currentRotation === currentTetromino.length) {
+      currentRotation = 0;
+    }
+    currentTetromino = tetrominoesArray[randomValue][currentRotation];
+    drawTetromino();
   }
 
   function freezeTetromino() {
