@@ -1,16 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+:root {
+  --square-size: 20px;
+  --square-border-size: 2px;
+  --grid-bg-color: #342b38;
+  --grid-lines-color: #403545;
+}
+
+*::after,
+*::before {
+  /* doing this on before/after can improve the normalizing effect on all elements */
+  box-sizing: border-box;
+}
+
+body {
+  background: rgb(208, 255, 219);
+  background: linear-gradient(90deg, rgba(208, 255, 219, 1) 0%, rgba(187, 241, 200, 1) 100%);
+  font-family: 'Roboto', sans-serif;
+}
+
+h3 {
+  padding: 1rem;
+}
+
+button {
+  background-color: #2786cf;
+  outline: none;
+  border: none;
+  border-radius: 50vh;
+  color: white;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
 .grid {
-  width: 200px;
-  height: 400px;
+  width: calc(var(--square-size) * 12);
+  /* width with border pixels added */
   display: flex;
   flex-wrap: wrap;
-  background-color: yellow;
+  background-color: var(--grid-bg-color);
+
+  border: 4px solid white;
+  border-radius: 2px;
+  margin-top: 1.2rem;
 }
 
-.grid div {
-  width: 20px;
-  height: 20px;
+.square {
+  width: var(--square-size);
+  height: var(--square-size);
+  border: var(--square-border-size) solid var(--grid-lines-color);
 }
+
 
 .tetromino {
-  background-color: tomato;
+  background-color: #FF87FF;
+}
+
+.blue {
+  background-color: #69FFFF;
+}
+
+.red {
+  background-color: #FF9494;
+}
+
+.green {
+  background-color: #C2FFA1;
+}
+
+.active {
+  box-shadow: inset 0px 0px 1px 2px rgba(255, 255, 255, 1);
+}
+
+.miniGrid_Container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 30px;
+}
+
+.miniGrid_Container::before {
+  content: "Up Next";
+}
+
+.miniGrid_Display {
+  width: calc(var(--square-size) * 5);
+  display: flex;
+  flex-wrap: wrap;
+  background-color: var(--grid-bg-color);
+  border: 4px solid white;
+  border-radius: 2px;
+
+
 }

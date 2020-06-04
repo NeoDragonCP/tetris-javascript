@@ -7,9 +7,15 @@
     <title>Tetris Game</title>
   </head>
   <body>
-    <h3>Score:<span>0</span></h3>
     <button id="start-btn">Start/Pause</button>
-    <div class="grid" id="grid"></div>
-    <script src="app.js"></script>
+
+    <div class="container">
+      <h3>Score:<span id="score-display">0</span></h3>
+      <div class="grid" id="grid"></div>
+      <div class="miniGrid_Container">
+        <div class="miniGrid_Display" id="miniGrid_Display"></div>
+      </div>
+    </div>
+    <script type="module" src="./scripts/app.js"></script>
   </body>
 </html>
