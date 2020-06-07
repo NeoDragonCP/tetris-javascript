@@ -1,6 +1,8 @@
 import { width, tetrominoesArray, tetrominoesColors } from "./tetrominos.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  const IS_DEBUGGING = true; // set to true for console logs
+
   // Main grid
   const grid = document.getElementById("grid");
 
@@ -11,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let miniGridIndex = 0;
 
   let timerId; // for gametick
+  let isPlaying = false;
+  let gameIsOver = true; // default/start is "on"
 
   const scoreDisplayLabel = document.getElementById("score-display");
   let score = 0;
@@ -32,9 +36,22 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentTetrominoValue = 0;
   let currentTetrominoColor = tetrominoesColors[0];
 
+  function debugLog(passedMessage) {
+    // Custom console logging for when debugging is enabled
+    if (IS_DEBUGGING != true) return;
+    console.log(passedMessage);
+  }
+
   function createSquaresInGrid(numOfSquares, numOfTakenSquares, useMiniGrid) {
     let _grid = grid;
-    if (useMiniGrid === true) _grid = miniGrid;
+    if (useMiniGrid === true) {
+      _grid = miniGrid;
+    } else {
+      // if using the main grid, clear it first so it's clean on reset
+      while (_grid.firstChild) {
+        _grid.removeChild(_grid.lastChild);
+      }
+    }
 
     // Create the base grid
     if (numOfSquares >= 1) {
@@ -55,27 +72,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Create all the squares in the grid first
-  createSquaresInGrid(numberOfSquares, 10, false);
+  // Set up the main grid on start
+  let squaresArray;
+  setUpMainGrid();
 
   // Create mini grid
   createSquaresInGrid(16, 0, true);
-
-  //const squaresArray = Array.from(document.getElementsByClassName("square")); // old way just getting the squares
-  let squaresArray = Array.from(document.querySelectorAll(".grid div"));
   let miniGridSquaresArray = Array.from(
     document.querySelectorAll(".miniGrid_Display div")
   );
 
-  // Get a random tetromino
-  getRandomTetromino();
-
-  // Start moving down
-  setUpTimerInterval();
+  function setUpMainGrid() {
+    // Create all the squares in the grid first
+    createSquaresInGrid(numberOfSquares, 10, false);
+    squaresArray = Array.from(document.querySelectorAll(".grid div"));
+  }
 
   // * * *
   //assign functions to keyCodes
   function control(e) {
+    // Disallow input if game is not playing/running
+    if (!isPlaying) return;
+
     if (e.keyCode === 37) {
       moveTetrominoLeft();
     } else if (e.keyCode === 38) {
@@ -90,12 +108,44 @@ document.addEventListener("DOMContentLoaded", () => {
   // * * *
 
   startBtn.addEventListener("click", () => {
-    if (timerId) {
-      clearInterval(timerId);
-      timerId = null;
-    } else {
+    // Check if need to restart game
+    if (gameIsOver === true) {
+      // Restart Game
+
+      debugLog("Restart/Start Game Pressed");
+
+      // Clean the board
+      undrawTetromino();
+      currentTetrominoValue = 0;
+      currentTetromino = [];
+      cleanGridOfTetrominos();
+      setUpMainGrid(); // this will redraw the main grid and it's taken divs below
+
+      // Set up the new game
+      getRandomTetromino();
       drawTetromino();
       setUpTimerInterval();
+      isPlaying = true;
+      startBtn.innerHTML = "Pause";
+      gameIsOver = false;
+
+      // Reset the score
+      score = 0;
+      scoreDisplayLabel.innerHTML = "0";
+    } else {
+      // Currently playing, pause
+      if (isPlaying) {
+        clearInterval(timerId);
+        timerId = null;
+        isPlaying = false;
+        startBtn.innerHTML = "Resume";
+      } else {
+        // Resume/unpause
+        drawTetromino();
+        setUpTimerInterval();
+        isPlaying = true;
+        startBtn.innerHTML = "Pause";
+      }
     }
   });
 
@@ -111,6 +161,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function drawTetromino() {
+    if (currentTetromino === undefined) return;
+
     currentTetromino.forEach((index) => {
       squaresArray[currentPosition + index].classList.add("tetromino");
       squaresArray[currentPosition + index].classList.add("active");
@@ -121,12 +173,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function undrawTetromino() {
+    if (currentTetromino === undefined) return;
+
     currentTetromino.forEach((index) => {
       squaresArray[currentPosition + index].classList.remove("tetromino");
       squaresArray[currentPosition + index].classList.remove("active");
       squaresArray[currentPosition + index].classList.remove(
         currentTetrominoColor
       );
+    });
+  }
+
+  function cleanGridOfTetrominos() {
+    squaresArray.forEach((square) => {
+      square.classList.remove("tetromino");
+      square.classList.remove("active");
+      square.classList.remove("taken");
+      removeColorFromPassedSquare(square);
     });
   }
 
@@ -148,6 +211,8 @@ document.addEventListener("DOMContentLoaded", () => {
       randomValue = getRandomTetrominoValue();
     }
 
+    debugLog("Getting Random Tetromino");
+
     // Set the current Tetromino to the previous random value (up next piece)
     currentTetrominoValue = randomValue;
     currentTetromino = tetrominoesArray[currentTetrominoValue][currentRotation];
@@ -165,10 +230,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Make Tetromino move down
   function setUpTimerInterval() {
-    timerId = setInterval(moveTetrominoDown, 500);
+    if (timerId === null || timerId === undefined) {
+      debugLog("Setting Up Timer");
+      timerId = setInterval(moveTetrominoDown, 500);
+    }
   }
 
   function moveTetrominoDown() {
+    // Check There is a current Tetromino
+    if (checkCurrentTetrominoIsValid() == false) return;
+
     undrawTetromino();
     currentPosition += width;
     drawTetromino();
@@ -176,6 +247,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function moveTetrominoLeft() {
+    // Check There is a current Tetromino
+    if (checkCurrentTetrominoIsValid() == false) return;
+
     undrawTetromino();
     const isAtLeftEdge = currentTetromino.some(
       (index) => (currentPosition + index) % width === 0
@@ -195,6 +269,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function moveTetrominoRight() {
+    // Check There is a current Tetromino
+    if (checkCurrentTetrominoIsValid() == false) return;
+
     undrawTetromino();
     const isAtRightEdge = currentTetromino.some(
       (index) => (currentPosition + index) % width === width - 1
@@ -214,6 +291,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function rotateTetromino() {
+    // Check There is a current Tetromino
+    if (checkCurrentTetrominoIsValid() == false) return;
+
     undrawTetromino();
     currentRotation++;
     if (currentRotation === currentTetromino.length) {
@@ -224,6 +304,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function freezeTetromino() {
+    // Check There is a current Tetromino
+    if (checkCurrentTetrominoIsValid() == false) return;
+
     // if some are taken set them all to taken
     if (
       currentTetromino.some((index) =>
@@ -237,11 +320,23 @@ document.addEventListener("DOMContentLoaded", () => {
         squaresArray[currentPosition + index].classList.remove("active");
       });
 
+      //debugLog("Freezing Tetromino");
+
       getRandomTetromino();
       drawTetromino();
       addScore();
       gameOver();
     }
+  }
+
+  function checkCurrentTetrominoIsValid() {
+    let isValid = true; // default
+
+    if (currentTetromino === undefined || currentTetromino === null)
+      isValid = false;
+    if (currentTetromino.length <= 0) isValid = false;
+
+    return isValid;
   }
 
   function addScore() {
@@ -284,6 +379,15 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       scoreDisplayLabel.innerHTML = "Game Over!";
       clearInterval(timerId);
+      timerId = null;
+      isPlaying = false;
+      startBtn.innerHTML = "Start New Game";
+      gameIsOver = true;
+
+      // Remove the active square
+      squaresArray.forEach((square) => {
+        square.classList.remove("active");
+      });
     }
   }
 });
