@@ -13,11 +13,11 @@ Originally I was doing it as just a bit of fun/practice but ended up doing my ow
 
 ## Improvements I made:
 
-Generated all of the grid divs (for displaying of the pieces) in Javascript rather than writing them all in the HTML file.
-Refactored code with improved readability to variable names and less repeating of the code in general.
-Broke out the Tetrominos into their own file. Functions for movement and rotation have safety checks that the CurrentTetromino is valid.
-Organized the CSS better and used variables for better control.
-Custom design overall.
+- Generated all of the grid divs (for displaying of the pieces) in Javascript rather than writing them all in the HTML file.
+- Refactored code with improved readability to variable names and less repeating of the code in general.
+- Broke out the Tetrominos into their own file. Functions for movement and rotation have safety checks that the CurrentTetromino is valid.
+- Organized the CSS better and used variables for better control.
+- Custom design overall.
 
 ## Known bugs:
 
