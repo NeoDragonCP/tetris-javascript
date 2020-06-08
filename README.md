@@ -3,7 +3,9 @@
 Coding in Javasript, with HTML/CSS.
 Link to play: https://neodragoncp.github.io/tetris-javascript/
 
-- STILL WORK IN PROGRESS
+- STILL IN DEVELOPMENT -
+
+![Screenshot](screenshot.png)
 
 I recently came across coding a Tetris game in Javascript by Ania Kubow.
 

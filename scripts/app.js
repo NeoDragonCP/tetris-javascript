@@ -1,7 +1,7 @@
 import { width, tetrominoesArray, tetrominoesColors } from "./tetrominos.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const IS_DEBUGGING = true; // set to true for console logs
+  const IS_DEBUGGING = false; // set to true for console logs
 
   // Main grid
   const grid = document.getElementById("grid");
