@@ -158,3 +158,43 @@ button {
 .highscore__container>.score__header {
   background-color: #C772A4;
 }
+
+.gamecontrols-desktop {
+  display: none;
+  /*mobile*/
+  margin-top: 2rem;
+  color: white;
+  text-align: center;
+}
+
+.gamecontrols-desktop span {
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+
+.gamecontrols-mobile {
+  /* mobile first here */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem;
+}
+
+.gamecontrols-mobile button {
+  /* mobile first here */
+  margin: 0.3rem;
+}
+
+/* desktop - show desktop text */
+@media only screen and (min-width: 768px) {
+
+  .gamecontrols-desktop {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .gamecontrols-mobile {
+    display: none;
+  }
+}

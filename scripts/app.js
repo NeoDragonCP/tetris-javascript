@@ -24,6 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const startBtn = document.getElementById("start-btn");
 
+  const mobilecontrol_Down = document.getElementById("down-btn");
+  const mobilecontrol_Left = document.getElementById("left-btn");
+  const mobilecontrol_Right = document.getElementById("right-btn");
+  const mobilecontrol_Rotate = document.getElementById("rotate-btn");
+
   const upNextTetrominoArray = [
     [1, miniGridWidth + 1, miniGridWidth * 2 + 1, 2], //lTetromino
     [0, miniGridWidth, miniGridWidth + 1, miniGridWidth * 2 + 1], //zTetromino
@@ -111,6 +116,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   document.addEventListener("keyup", control);
+  // * * *
+
+  // Mobile controls
+  mobilecontrol_Down.addEventListener("click", () => {
+    if (!isPlaying) return;
+    moveTetrominoDown();
+  });
+
+  mobilecontrol_Left.addEventListener("click", () => {
+    if (!isPlaying) return;
+    moveTetrominoLeft();
+  });
+
+  mobilecontrol_Right.addEventListener("click", () => {
+    if (!isPlaying) return;
+    moveTetrominoRight();
+  });
+
+  mobilecontrol_Rotate.addEventListener("click", () => {
+    if (!isPlaying) return;
+    rotateTetromino();
+  });
+
   // * * *
 
   startBtn.addEventListener("click", () => {
