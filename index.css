@@ -132,6 +132,7 @@ button {
   flex-direction: column;
   color: white;
   background-color: var(--secondary-bg-color);
+  margin-top: 1rem;
 }
 
 .score__header {
@@ -145,4 +146,15 @@ button {
 .score__label {
   font-size: 2rem;
   padding-left: 10px;
+}
+
+
+.highscore__container {
+
+  border-color: #EFAEF2;
+
+}
+
+.highscore__container>.score__header {
+  background-color: #C772A4;
 }

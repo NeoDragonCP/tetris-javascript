@@ -20,6 +20,7 @@ Originally I was doing it as just a bit of fun/practice but ended up doing my ow
 - Broke out the Tetrominos into their own file. Functions for movement and rotation have safety checks that the CurrentTetromino is valid.
 - Organized the CSS better and used variables for better control.
 - Custom design overall.
+- Added highscore saved to local storage.
 
 ## Known bugs:
 

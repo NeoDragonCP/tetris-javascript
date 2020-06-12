@@ -19,6 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const scoreDisplayLabel = document.getElementById("score-display");
   let score = 0;
 
+  const highscoreDisplayLabel = document.getElementById("highscore-display");
+  let highscore = localStorage.getItem("highscore");
+
   const startBtn = document.getElementById("start-btn");
 
   const upNextTetrominoArray = [
@@ -81,6 +84,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let miniGridSquaresArray = Array.from(
     document.querySelectorAll(".miniGrid_Display div")
   );
+
+  // Display the highscore
+  updateHighscoreDisplay();
 
   function setUpMainGrid() {
     // Create all the squares in the grid first
@@ -371,12 +377,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function updateHighscoreDisplay() {
+    if (highscore < 0) highscore = 0;
+
+    if (score > highscore) {
+      highscore = score;
+      localStorage.setItem("highscore", highscore);
+    }
+
+    highscoreDisplayLabel.innerHTML = `${highscore}`;
+  }
+
   function gameOver() {
     if (
       currentTetromino.some((index) =>
         squaresArray[currentPosition + index].classList.contains("taken")
       )
     ) {
+      updateHighscoreDisplay();
       scoreDisplayLabel.innerHTML = "Game Over!";
       clearInterval(timerId);
       timerId = null;
