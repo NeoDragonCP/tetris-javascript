@@ -406,6 +406,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateHighscoreDisplay() {
+    // Some safety checks
+    if (highscore === null) highscore = 0;
     if (highscore < 0) highscore = 0;
 
     if (score > highscore) {
