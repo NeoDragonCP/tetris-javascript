@@ -183,7 +183,9 @@ button {
 
 .gamecontrols-mobile button {
   /* mobile first here */
-  margin: 0.3rem;
+  margin: 0.1rem;
+  padding: 1.2rem;
+  font-size: 1.2rem;
 }
 
 /* desktop - show desktop text */
